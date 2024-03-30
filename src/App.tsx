@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button, CssBaseline } from "@mui/material";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Chats from "./Page/Chats";
+import Login from "./Page/Login";
+import ChatRoom from "./Page/ChatRoom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Chats />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/chat-room/:id",
+    element: <ChatRoom />,
+  },
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CssBaseline />
+      <RouterProvider router={router} />
     </div>
   );
 }
