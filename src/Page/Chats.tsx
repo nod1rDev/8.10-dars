@@ -16,7 +16,7 @@ function Chats() {
           <ChatItem />
           <ChatItem />
           <ChatItem />
-          <ChatItem />
+          
         </List>
       </Grid>
 
