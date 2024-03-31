@@ -14,10 +14,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Telegram } from "@mui/icons-material";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
 function Copyright(props: any) {
@@ -41,13 +38,12 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function SignUp() {
   const [value, setValue] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
-
- 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -57,15 +53,16 @@ export default function Login() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(value);
 
-    signInWithEmailAndPassword(auth, value.email, value.password)
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    if (value.confirmPassword == value.password) {
+      createUserWithEmailAndPassword(auth, value.email, value.password)
+        .then((userr) => {
+          console.log(userr);
+        })
+        .catch((erorr) => {
+          console.log(erorr.message);
+        });
+    }
   };
 
   return (
@@ -103,7 +100,7 @@ export default function Login() {
               <Telegram />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Sign Up
             </Typography>
             <Box
               component="form"
@@ -135,6 +132,18 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
               />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={value.confirmPassword}
+                onChange={handleChange}
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="current-password"
+              />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -154,8 +163,8 @@ export default function Login() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/login" variant="body2">
+                    {"Don you have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>

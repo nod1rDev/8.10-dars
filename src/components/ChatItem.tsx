@@ -35,24 +35,30 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }));
-function ChatItem() {
+function ChatItem(props: {
+  name: string;
+  online: boolean;
+  img: string;
+  messageDate: string;
+}) {
   return (
     <div className=" cursor-pointer">
       <ListItem>
         <ListItemAvatar>
-          <StyledBadge
-            badgeContent={5}
-          
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            overlap="circular"
-            color="primary"
-          >
-            <Avatar>
-              <Person></Person>
-            </Avatar>
-          </StyledBadge>
+          {props.online ? (
+            <StyledBadge
+              badgeContent={5}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              overlap="circular"
+              color="primary"
+            >
+              <Avatar src={props.img}></Avatar>
+            </StyledBadge>
+          ) : (
+            <Avatar src={props.img}></Avatar>
+          )}
         </ListItemAvatar>
-        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+        <ListItemText primary={props.name} secondary={props.messageDate} />
       </ListItem>
       <Divider />
     </div>
