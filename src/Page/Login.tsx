@@ -19,6 +19,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -46,8 +47,8 @@ export default function Login() {
     email: "",
     password: "",
   });
-
- 
+  const [correct, setCorrect] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -57,15 +58,20 @@ export default function Login() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(value);
 
     signInWithEmailAndPassword(auth, value.email, value.password)
       .then((user) => {
         console.log(user);
+        setCorrect(true);
       })
       .catch((error) => {
         console.log(error.message);
+        setCorrect(false);
       });
+
+    if (correct) {
+      navigate("/");
+    }
   };
 
   return (

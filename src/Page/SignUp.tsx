@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Telegram } from "@mui/icons-material";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -44,6 +45,8 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
   });
+  const navigate = useNavigate();
+  const [correct, setCorrect] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -58,10 +61,15 @@ export default function SignUp() {
       createUserWithEmailAndPassword(auth, value.email, value.password)
         .then((userr) => {
           console.log(userr);
+          setCorrect(true);
         })
         .catch((erorr) => {
           console.log(erorr.message);
+          setCorrect(false);
         });
+    }
+    if (correct) {
+      navigate("/");
     }
   };
 
