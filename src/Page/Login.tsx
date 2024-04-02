@@ -4,8 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -15,10 +14,11 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Telegram } from "@mui/icons-material";
 import {
-  createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
@@ -47,7 +47,7 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const [correct, setCorrect] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,18 +62,31 @@ export default function Login() {
     signInWithEmailAndPassword(auth, value.email, value.password)
       .then((user) => {
         console.log(user);
-        setCorrect(true);
+        navigate("/");
       })
       .catch((error) => {
-        console.log(error.message);
-        setCorrect(false);
-      });
+        alert("You have a mistake");
 
-    if (correct) {
-      navigate("/");
-    }
+        navigate("/login");
+      });
   };
 
+  const handleGoogle = () => {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        // ...
+      });
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: "100%" }}>
@@ -141,10 +154,7 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
                 type="submit"
                 fullWidth
@@ -155,9 +165,11 @@ export default function Login() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+                  <button onClick={handleGoogle}>
+                    <Link href="#" variant="body2">
+                      Login with Google
+                    </Link>
+                  </button>
                 </Grid>
                 <Grid item>
                   <Link href="/signup" variant="body2">

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { Alert } from "@mui/material";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Protected({ children }: { children: any }) {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ function Protected({ children }: { children: any }) {
       return children;
     }
 
-    return <Navigate to={"/login"} />;
+    return <Navigate to={"/signup"} />;
   }
 }
 

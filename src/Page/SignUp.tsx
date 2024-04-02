@@ -4,8 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -14,8 +12,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Telegram } from "@mui/icons-material";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
@@ -47,6 +49,7 @@ export default function SignUp() {
   });
   const navigate = useNavigate();
   const [correct, setCorrect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -56,21 +59,39 @@ export default function SignUp() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setLoading(true);
     if (value.confirmPassword == value.password) {
       createUserWithEmailAndPassword(auth, value.email, value.password)
         .then((userr) => {
           console.log(userr);
-          setCorrect(true);
+          navigate("/upload");
         })
         .catch((erorr) => {
           console.log(erorr.message);
-          setCorrect(false);
+          alert("You have a mistake")
+          navigate("/signup");
         });
+    } else {
+      alert("You have mistake with password");
     }
-    if (correct) {
-      navigate("/");
-    }
+    setLoading(false);
+  };
+
+  const handleGoogle = () => {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        // ...
+      });
   };
 
   return (
@@ -152,27 +173,27 @@ export default function SignUp() {
                 id="confirmPassword"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
+                disabled={loading ? true : false}
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Sign Up
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+                  <button onClick={handleGoogle}>
+                    <Link href="#" variant="body2">
+                      Login with Google
+                    </Link>
+                  </button>
                 </Grid>
                 <Grid item>
                   <Link href="/login" variant="body2">
-                    {"Don you have an account? Sign Up"}
+                    {"Don you have an account? Sign In"}
                   </Link>
                 </Grid>
               </Grid>

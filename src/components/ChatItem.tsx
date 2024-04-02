@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { Badge, Divider } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import styled from "@emotion/styled";
+import { MouseEventHandler } from "react";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -40,10 +41,11 @@ function ChatItem(props: {
   online: boolean;
   img: string;
   messageDate: string;
+  onClick: any;
 }) {
   return (
-    <div className=" cursor-pointer">
-      <ListItem>
+    <div onClick={props.onClick} className=" cursor-pointer">
+      <ListItem >
         <ListItemAvatar>
           {props.online ? (
             <StyledBadge
